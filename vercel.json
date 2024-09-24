@@ -8,11 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",   // API requests handled by the backend
-      "dest": "server1.2.js"
-    },
-    {
-      "src": "/(.*)",       // Non-API requests also routed to the backend
+      "src": "/(.*)",
       "dest": "server1.2.js"
     }
   ]
