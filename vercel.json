@@ -1,4 +1,3 @@
-
 {
   "version": 2,
   "builds": [
@@ -9,13 +8,12 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",   // All requests to /api/* should be routed to the server
+      "src": "/api/(.*)",   // API requests handled by the backend
       "dest": "server1.2.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/edit.html"
+      "src": "/(.*)",       // Non-API requests also routed to the backend
+      "dest": "server1.2.js"
     }
   ]
 }
-
