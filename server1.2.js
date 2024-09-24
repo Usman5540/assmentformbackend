@@ -25,12 +25,9 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    // origin: 'http://localhost:5500', // Allows requests from all origins
-    // methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'], // Include DELETE method here
-    // allowedHeaders: ['Content-Type']
-      origin: '*', // Allows all origins
-  methods: ['GET', 'POST', 'DELETE', 'PUT'], // Include all the methods you need
-  allowedHeaders: ['Content-Type']
+    origin: '*', // Allows all origins
+    methods: ['GET', 'POST', 'DELETE', 'PUT'], // Allowed methods
+    allowedHeaders: ['Content-Type']
 }));
 
 app.use(bodyParser.json());
@@ -47,14 +44,15 @@ const saveNewDataToFile = async (updatedData) => {
         throw new Error('Error updating data');
     }
 };
-app.get("/",(req,res)=>{
- res.json(`server is running`)
-})
-// Endpoint to delete a question
-app.delete('/delete-question/:id', async (req, res) => {
-    const questionId = parseInt(req.params.id, 10);
-    console.log(questionId)
 
+// Basic health check endpoint
+app.get("/", (req, res) => {
+    res.json(`server is running`);
+});
+
+// Endpoint to delete a question
+app.delete('/api/delete-question/:id', async (req, res) => {
+    const questionId = parseInt(req.params.id, 10);
     if (isNaN(questionId)) {
         return res.status(400).json({ success: false, message: 'Invalid question ID' });
     }
@@ -66,10 +64,7 @@ app.delete('/delete-question/:id', async (req, res) => {
             return res.status(404).json({ success: false, message: 'Question not found' });
         }
 
-        // Remove the question from the array
         newData.splice(questionIndex, 1);
-
-        // Save updated data to the file
         await saveNewDataToFile(newData);
 
         res.json({ success: true, message: 'Question deleted successfully' });
@@ -79,9 +74,8 @@ app.delete('/delete-question/:id', async (req, res) => {
     }
 });
 
-
 // Endpoint to update query data
-app.post('/update-data', async (req, res) => {
+app.post('/api/update-data', async (req, res) => {
     const { updatedQuestions } = req.body;
 
     if (!Array.isArray(updatedQuestions) || updatedQuestions.length === 0) {
@@ -114,14 +108,13 @@ app.post('/update-data', async (req, res) => {
 });
 
 // Endpoint to add a new question
-app.post('/add-question', async (req, res) => {
+app.post('/api/add-question', async (req, res) => {
     const { newQuestion, newPhrase, isPositive, index } = req.body;
 
     if (!newQuestion || !newPhrase || typeof isPositive === 'undefined' || typeof index !== 'number') {
         return res.status(400).json({ success: false, message: 'Invalid input data' });
     }
 
-    // Find the next available ID
     const existingIds = newData.map(item => item.id);
     let newId = 1;
     while (existingIds.includes(newId)) {
@@ -150,6 +143,7 @@ app.get('/api/data', (req, res) => {
     res.json(newData);
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
