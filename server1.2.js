@@ -25,9 +25,12 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    origin: 'http://localhost:5500', // Allows requests from all origins
-    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'], // Include DELETE method here
-    allowedHeaders: ['Content-Type']
+    // origin: 'http://localhost:5500', // Allows requests from all origins
+    // methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'], // Include DELETE method here
+    // allowedHeaders: ['Content-Type']
+      origin: '*', // Allows all origins
+  methods: ['GET', 'POST', 'DELETE', 'PUT'], // Include all the methods you need
+  allowedHeaders: ['Content-Type']
 }));
 
 app.use(bodyParser.json());
