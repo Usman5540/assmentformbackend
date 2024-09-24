@@ -25,7 +25,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    origin: '*', // Allows requests from all origins
+    origin: 'http://localhost:5500', // Allows requests from all origins
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'], // Include DELETE method here
     allowedHeaders: ['Content-Type']
 }));
