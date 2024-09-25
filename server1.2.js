@@ -16,6 +16,7 @@ const dataFilePath = path.join(__dirname, 'newData.js');
 let newData;
 try {
     newData = (await import('./newData.js')).newData;
+    console.log('Initial data loaded:', newData); // Log loaded data
 } catch (err) {
     console.error('Error loading initial data:', err);
     process.exit(1);  // Exit the process if data cannot be loaded
@@ -33,12 +34,13 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Helper function to save the updated newData to file
 const saveNewDataToFile = async (updatedData) => {
     const newFileContent = `const newData = ${JSON.stringify(updatedData, null, 2)};\nexport { newData };`;
+    console.log('Saving data to file:', newFileContent); // Log data being saved
 
     try {
         await fs.writeFile(dataFilePath, newFileContent, 'utf8');
+        console.log('Data saved successfully'); // Log success
     } catch (err) {
         console.error('Error writing file:', err);
         throw new Error('Error updating data');
@@ -53,13 +55,16 @@ app.get("/", (req, res) => {
 // Endpoint to delete a question
 app.delete('/api/delete-question/:id', async (req, res) => {
     const questionId = parseInt(req.params.id, 10);
+    console.log('Received request to delete question with ID:', questionId);
+
     if (isNaN(questionId)) {
+        console.error('Invalid question ID');
         return res.status(400).json({ success: false, message: 'Invalid question ID' });
     }
 
     try {
-        console.log('Attempting to delete question with ID:', questionId);
         const questionIndex = newData.findIndex(item => item.id === questionId);
+        console.log('Finding question at index:', questionIndex);
 
         if (questionIndex === -1) {
             return res.status(404).json({ success: false, message: 'Question not found' });
@@ -74,6 +79,7 @@ app.delete('/api/delete-question/:id', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error deleting question' });
     }
 });
+
 
 
 // Endpoint to update query data
