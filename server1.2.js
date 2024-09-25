@@ -58,7 +58,8 @@ app.delete('/api/delete-question/:id', async (req, res) => {
     }
 
     try {
-        const questionIndex = newData.findIndex((item) => item.id === questionId);
+        console.log('Attempting to delete question with ID:', questionId);
+        const questionIndex = newData.findIndex(item => item.id === questionId);
 
         if (questionIndex === -1) {
             return res.status(404).json({ success: false, message: 'Question not found' });
@@ -66,13 +67,14 @@ app.delete('/api/delete-question/:id', async (req, res) => {
 
         newData.splice(questionIndex, 1);
         await saveNewDataToFile(newData);
-
+        
         res.json({ success: true, message: 'Question deleted successfully' });
     } catch (err) {
-        console.error('Error processing delete question:', err);
+        console.error('Error processing delete question:', err.stack);
         res.status(500).json({ success: false, message: 'Error deleting question' });
     }
 });
+
 
 // Endpoint to update query data
 app.post('/api/update-data', async (req, res) => {
